@@ -1,0 +1,4 @@
+chromadb
+scikit-learn
+google-genai
+streamlit
