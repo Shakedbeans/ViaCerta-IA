@@ -1,14 +1,3 @@
-"""
-Passo 2: Ingestão de documentos.
-
-Lê os artigos (por enquanto de um JSON de amostra; depois trocamos por
-PDFs reais do CTB/CONTRAN) e guarda cada um no ChromaDB como um "chunk"
-já pronto para busca.
-
-Cada chunk carrega metadados (documento, artigo, tema) para que a
-resposta final sempre possa citar a fonte.
-"""
-
 import json
 import chromadb
 from pathlib import Path

@@ -1,17 +1,3 @@
-"""
-Passo 6: Interface web com Streamlit.
-
-Junta tudo que foi construído nos passos anteriores em uma interface
-com duas abas:
-
-1. "Tirar dúvida" -> usa answer.py (pergunta + RAG + function calling
-   + resposta estruturada com fonte), em estilo de chat
-2. "Questão de estudo" -> usa quiz.py (gerar_questao), com placar
-
-Para rodar:
-    streamlit run src/app.py
-"""
-
 import re
 import streamlit as st
 from answer import perguntar

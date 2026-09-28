@@ -1,26 +1,3 @@
-"""
-Passo 4: Geração da resposta final com a API da OpenAI.
-
-Mesma arquitetura de antes, agora usando a OpenAI em vez do Gemini:
-
-- Function calling: a IA decide sozinha quando chamar buscar_regra()
-  ou buscar_artigo(). A API da OpenAI não executa a função sozinha
-  (diferente do SDK do Gemini) — por isso escrevemos um loop manual:
-  a IA pede a chamada, a gente executa de verdade e devolve o
-  resultado pra ela continuar.
-- RAG: as funções chamadas buscam nos documentos reais (via retrieval.py).
-- Prompt engineering: o system prompt trava a IA para responder SOMENTE
-  com base no que foi encontrado, em linguagem simples.
-- Structured output: a resposta final é sempre um JSON com os campos
-  resposta, explicacao, documento, artigo, trecho.
-
-Fluxo:
-  Pergunta do usuário
-    -> IA decide chamar buscar_regra("...")
-    -> a gente executa a função de verdade e devolve o resultado pra IA
-    -> IA gera a resposta final já no formato JSON
-"""
-
 import os
 import json
 from openai import OpenAI

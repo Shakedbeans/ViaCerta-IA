@@ -1,23 +1,3 @@
-"""
-Função de embeddings local, sem depender de baixar modelos externos.
-
-Por padrão o ChromaDB tenta baixar um modelo (all-MiniLM-L6-v2) da
-internet na primeira vez que roda. Isso pode falhar em ambientes com
-rede restrita (como sandboxes) e, mais importante pro seu caso,
-adiciona uma dependência de rede/modelo pesado que não é necessária
-para uma base pequena de 15-25 documentos.
-
-Aqui usamos TF-IDF (scikit-learn) como "embedding": cada texto vira um
-vetor com base na frequência das palavras, ponderada pela raridade
-delas na coleção toda. Funciona bem para busca textual em bases
-pequenas/médias e roda 100% localmente, sem downloads.
-
-Se no futuro a base crescer muito ou a busca por significado (não só
-palavras) ficar importante, dá pra trocar por embeddings de verdade
-(ex: API da OpenAI/Anthropic ou um modelo local) sem mudar o resto do
-pipeline — só troca essa classe.
-"""
-
 from chromadb import EmbeddingFunction, Documents, Embeddings
 from sklearn.feature_extraction.text import TfidfVectorizer
 import numpy as np

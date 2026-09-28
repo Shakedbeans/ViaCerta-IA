@@ -1,19 +1,3 @@
-"""
-Passo 5: Gerador de questões de estudo (gerar_questao), agora usando
-a API da OpenAI.
-
-Mesma arquitetura do answer.py, só que em vez de responder uma pergunta
-do usuário, a IA cria uma questão de múltipla escolha no estilo da
-prova teórica da CNH, baseada em um artigo real dos documentos.
-
-Fluxo:
-  Usuário pede uma questão (opcionalmente sobre um tema)
-    -> buscar_regra(tema) encontra um artigo relevante
-    -> IA gera a questão em cima DESSE artigo específico
-    -> resposta estruturada: pergunta, alternativas, resposta certa,
-       explicação e a fonte usada
-"""
-
 import os
 import json
 import random

@@ -1,14 +1,3 @@
-"""
-Passo 3: Funções de busca (RAG).
-
-Estas são as funções que a IA vai "chamar" via function calling:
-
-- buscar_regra(pergunta): busca semântica livre — usada quando o
-  usuário faz uma pergunta em linguagem natural.
-- buscar_artigo(numero): busca direta por número de artigo — usada
-  quando o usuário (ou a IA) já sabe qual artigo quer conferir.
-"""
-
 import chromadb
 from pathlib import Path
 from embeddings import TfidfEmbeddingFunction
