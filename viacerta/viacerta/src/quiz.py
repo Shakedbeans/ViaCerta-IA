@@ -1,5 +1,6 @@
 """
-Passo 5: Gerador de questões de estudo (gerar_questao).
+Passo 5: Gerador de questões de estudo (gerar_questao), agora usando
+a API da OpenAI.
 
 Mesma arquitetura do answer.py, só que em vez de responder uma pergunta
 do usuário, a IA cria uma questão de múltipla escolha no estilo da
@@ -16,12 +17,11 @@ Fluxo:
 import os
 import json
 import random
-from google import genai
-from google.genai import types
+from openai import OpenAI
 from retrieval import buscar_regra
 from ingest import DATA_PATH
 
-MODEL = "gemini-3.8-flash"
+MODEL = "gpt-5.6-luna"
 
 SYSTEM_PROMPT = """\
 Você é o ViaCerta IA, um gerador de questões de estudo para a prova \
@@ -39,8 +39,7 @@ Regras:
 3. As alternativas erradas devem ser plausíveis (erros comuns que uma \
 pessoa estudando poderia cometer), não absurdas.
 4. Linguagem clara e objetiva, como nas provas reais.
-5. Responda SOMENTE com um JSON válido (sem texto antes ou depois, \
-sem ```), no formato:
+5. Responda SOMENTE com um JSON válido, no formato:
 {
   "pergunta": "texto da pergunta",
   "alternativas": {
@@ -89,9 +88,9 @@ def gerar_questao(tema: str | None = None) -> dict:
     """
     base = _escolher_trecho_base(tema)
 
-    client = genai.Client()
+    client = OpenAI()
 
-    prompt = (
+    prompt_usuario = (
         f"Trecho de referência:\n"
         f"Documento: {base['documento']}\n"
         f"Artigo: {base['artigo']}\n"
@@ -99,21 +98,20 @@ def gerar_questao(tema: str | None = None) -> dict:
         f"Crie a questão de múltipla escolha a partir deste trecho."
     )
 
-    resposta = client.models.generate_content(
+    resposta = client.chat.completions.create(
         model=MODEL,
-        contents=prompt,
-        config=types.GenerateContentConfig(system_instruction=SYSTEM_PROMPT),
+        messages=[
+            {"role": "system", "content": SYSTEM_PROMPT},
+            {"role": "user", "content": prompt_usuario},
+        ],
+        response_format={"type": "json_object"},
     )
 
-    texto_final = resposta.text.strip()
-    if texto_final.startswith("```"):
-        texto_final = texto_final.strip("`")
-        if texto_final.startswith("json"):
-            texto_final = texto_final[4:].strip()
+    texto_final = resposta.choices[0].message.content
 
     try:
         return json.loads(texto_final)
-    except json.JSONDecodeError:
+    except (json.JSONDecodeError, TypeError):
         return {
             "erro": "A IA não retornou um JSON válido.",
             "resposta_bruta": texto_final,
@@ -121,8 +119,8 @@ def gerar_questao(tema: str | None = None) -> dict:
 
 
 if __name__ == "__main__":
-    if not os.environ.get("GEMINI_API_KEY"):
-        print("⚠️  Defina a variável de ambiente GEMINI_API_KEY antes de rodar.")
+    if not os.environ.get("OPENAI_API_KEY"):
+        print("⚠️  Defina a variável de ambiente OPENAI_API_KEY antes de rodar.")
         raise SystemExit(1)
 
     print("Gerando uma questão sobre 'estacionamento'...\n")

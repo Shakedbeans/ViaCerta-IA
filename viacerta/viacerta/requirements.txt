@@ -1,4 +1,4 @@
 chromadb
 scikit-learn
-google-genai
+openai
 streamlit
